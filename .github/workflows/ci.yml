@@ -17,15 +17,12 @@ jobs:
         node-version: [18.x, 20.x]
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-          cache-dependency-path: server/package-lock.json
-      - run: npm ci
-      - run: npm run lint --if-present
-      # Optionally run tests here (add test script later)
+      - run: npm install
+      # Add any server tests here if you create test scripts later
 
   client-build:
     runs-on: ubuntu-latest
@@ -37,17 +34,10 @@ jobs:
         node-version: [18.x, 20.x]
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-          cache-dependency-path: client/package-lock.json
-      - run: npm ci
+      - run: npm install
       - run: npm run build
-      # If you want to deploy to GitHub Pages or Netlify, add appropriate deploy steps here
-      # - name: Deploy to GitHub Pages
-      #   uses: peaceiris/actions-gh-pages@v3
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     publish_dir: ./client/dist
+      # If you want to deploy to GitHub Pages/Netlify, add deploy step here
