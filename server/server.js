@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const moduleRoutes = require('./routes/moduleRoutes');
 const quizRoutes = require('./routes/quizRoutes');
@@ -10,7 +9,6 @@ const resourceRoutes = require('./routes/resourceRoutes');
 const { errorHandler } = require('./middleware/errorHandler');
 
 dotenv.config();
-connectDB();
 
 const app = express();
 app.use(cors());
