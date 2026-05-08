@@ -1,17 +1,19 @@
-const Progress = require('../models/Progress');
+let progressEntries = [];
 
 const getUserProgress = async (req, res) => {
-  const progress = await Progress.find({ user: req.user._id });
-  res.json(progress);
+  const userProgress = progressEntries.filter(p => p.user === req.user.id);
+  res.json(userProgress);
 };
 
 const updateProgress = async (req, res) => {
   const { moduleId, completedLessons, quizScore } = req.body;
-  const filter = { user: req.user._id, module: moduleId };
-  const update = { completedLessons, quizScore };
-  const options = { upsert: true, new: true };
-  const progress = await Progress.findOneAndUpdate(filter, update, options);
-  res.json(progress);
+  const existingIndex = progressEntries.findIndex(p => p.user === req.user.id && p.module === moduleId);
+  if (existingIndex >= 0) {
+    progressEntries[existingIndex] = { user: req.user.id, module: moduleId, completedLessons, quizScore, updatedAt: new Date() };
+  } else {
+    progressEntries.push({ user: req.user.id, module: moduleId, completedLessons, quizScore, updatedAt: new Date() });
+  }
+  res.json(progressEntries.find(p => p.user === req.user.id && p.module === moduleId));
 };
 
 module.exports = { getUserProgress, updateProgress };
